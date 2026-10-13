@@ -1,0 +1,5 @@
+import { NextResponse } from "next/server";
+import { query } from "@/lib/db";
+import { adminOr401, originAllowed } from "@/lib/http";
+export async function GET(){const a=await adminOr401();if(a.response)return a.response;const {rows}=await query<{key:string,value:string}>("SELECT key,value FROM site_setting ORDER BY key");return NextResponse.json(Object.fromEntries(rows.map(x=>[x.key,x.value])));}
+export async function PUT(r:Request){if(!originAllowed(r))return NextResponse.json({error:"Origem não autorizada."},{status:403});const a=await adminOr401();if(a.response)return a.response;const b=await r.json().catch(()=>null);if(!b||typeof b!=="object")return NextResponse.json({error:"Dados inválidos."},{status:400});const allowed=["whatsapp_url","instagram_url","hero_title","hero_description","contact_text"];for(const key of allowed){if(typeof b[key]==="string"){const value=String(b[key]).trim().slice(0,2000);await query("INSERT INTO site_setting(key,value,updated_at) VALUES($1,$2,now()) ON CONFLICT(key) DO UPDATE SET value=EXCLUDED.value,updated_at=now()",[key,value]);}}return NextResponse.json({ok:true});}

@@ -1,0 +1,12 @@
+node_modules/
+.next/
+.env
+.env.local
+*.log
+
+_backup-*/
+*.ps1
+*.zip
+Pievi_Club_Entrega/
+gitignore
+gitignore (1)

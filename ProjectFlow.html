@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="pt-BR"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ProjectFlow</title>
+<style>
+:root{--bg:#071217;--panel:#0c1820;--bd:#1b303c;--tx:#edf5f7;--mu:#8aa0a9;--teal:#12d8c0;--blue:#4b9cff;--pur:#9a6cff;--yel:#f5bd45;--red:#ff6575;--grn:#27d99b;--in:#10212b}
+:root[data-theme=light]{--bg:#eef4f6;--panel:#fff;--bd:#d3e0e5;--tx:#10222b;--mu:#5d727b;--in:#f3f8fa}
+*{box-sizing:border-box}html,body{height:100%}
+body{margin:0;background:var(--bg);color:var(--tx);font:14px system-ui,-apple-system,Segoe UI,sans-serif;padding-top:env(safe-area-inset-top,0px)}
+button,input,select{font:inherit;color:inherit}
+.app{display:flex;min-height:100%}
+.side{width:230px;border-right:1px solid var(--bd);background:var(--panel);padding:16px 12px;position:fixed;inset:0 auto 0 0;overflow:auto;z-index:6}
+.brand{display:flex;gap:10px;align-items:center;padding:6px 8px 18px;font-weight:700;font-size:17px}
+.logo{width:32px;height:32px;border:3px solid var(--teal);border-radius:8px 14px;color:var(--teal);display:grid;place-items:center;font-weight:900}
+.nav button{width:100%;border:0;background:none;display:flex;gap:12px;align-items:center;padding:10px 12px;border-radius:9px;cursor:pointer;color:var(--mu);text-align:left;margin-bottom:3px}
+.nav button:hover,.nav button.on{background:rgba(18,216,192,.15);color:var(--tx)}
+.nav svg{width:19px;height:19px;flex:none;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.main{margin-left:230px;flex:1;min-width:0}
+.top{height:62px;display:flex;align-items:center;gap:14px;padding:0 24px;border-bottom:1px solid var(--bd);position:sticky;top:0;background:var(--bg);z-index:5}
+.sw{position:relative;flex:1;max-width:460px}
+.search{width:100%;height:36px;border:1px solid var(--bd);background:var(--in);border-radius:8px;padding:0 12px;outline:none}
+.search:focus{border-color:var(--teal)}
+.res{position:absolute;top:40px;left:0;right:0;background:var(--panel);border:1px solid var(--bd);border-radius:9px;max-height:320px;overflow:auto;display:none;box-shadow:0 14px 40px rgba(0,0,0,.35)}
+.res div{padding:9px 12px;cursor:pointer;font-size:13px;display:flex;justify-content:space-between;gap:8px}
+.res div:hover{background:rgba(18,216,192,.12)}.res small{color:var(--mu)}
+.tr{margin-left:auto;display:flex;align-items:center;gap:12px}
+.av{width:34px;height:34px;border-radius:50%;background:linear-gradient(145deg,#2a6f6a,#123);display:grid;place-items:center;font-weight:700;color:#fff}
+.content{padding:22px 24px 40px}
+h1{margin:0;font-size:24px}.sub{color:var(--mu);margin:5px 0 18px}
+.card{background:var(--panel);border:1px solid var(--bd);border-radius:12px}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:12px}
+.kpi{padding:15px;cursor:pointer}.kpi small{color:var(--mu)}.kpi b{display:block;font-size:25px;margin:6px 0 2px}
+.g{display:grid;grid-template-columns:minmax(0,1.7fr) minmax(300px,1fr);gap:12px}.stack{display:grid;gap:12px;align-content:start}
+.ch{display:flex;justify-content:space-between;align-items:center;padding:14px 16px 8px;gap:8px;flex-wrap:wrap}.ch h2{margin:0;font-size:15px}
+.lnk{background:none;border:0;color:var(--teal);cursor:pointer;font-size:12px}
+.tw{overflow-x:auto}table{width:100%;border-collapse:collapse;min-width:560px}
+th,td{text-align:left;padding:10px 16px;border-top:1px solid var(--bd);font-size:13px}th{color:var(--mu);font-weight:500}
+td small{display:block;color:var(--mu)}
+.bar{height:7px;width:90px;background:var(--bd);border-radius:9px;overflow:hidden;display:inline-block;vertical-align:middle;margin-right:8px}
+.bar i{display:block;height:100%;background:var(--teal)}
+.st{padding:3px 9px;border-radius:20px;font-size:12px;white-space:nowrap;background:rgba(75,156,255,.15);color:var(--blue)}
+.st.c{background:rgba(39,217,155,.15);color:var(--grn)}.st.p{background:rgba(245,189,69,.15);color:var(--yel)}
+.btn{background:var(--teal);color:#032;border:0;border-radius:8px;padding:8px 14px;font-weight:600;cursor:pointer}
+.btn.s{background:transparent;color:var(--tx);border:1px solid var(--bd)}.btn.d{background:transparent;color:var(--red);border:1px solid var(--bd)}
+.ib{background:none;border:1px solid var(--bd);border-radius:6px;padding:4px 8px;cursor:pointer;font-size:12px;margin-left:4px}
+.row{display:flex;gap:10px;padding:10px 16px;border-top:1px solid var(--bd);align-items:center;font-size:13px}
+.row small{display:block;color:var(--mu)}.row .t{margin-left:auto;color:var(--mu);font-size:12px;white-space:nowrap}
+.row.done b{text-decoration:line-through;color:var(--mu)}
+input[type=checkbox]{accent-color:var(--teal);width:16px;height:16px}
+.fin{display:grid;grid-template-columns:repeat(3,1fr);padding:4px 16px 8px;gap:8px}.fin b{display:block;font-size:16px;margin:3px 0}.fin small{color:var(--mu)}
+.up{color:var(--grn);font-size:12px}.dn{color:var(--red);font-size:12px}
+.gantt{padding:0 16px 16px;overflow-x:auto}.gi{min-width:600px;position:relative}
+.gr{display:flex;align-items:center;height:36px;border-top:1px solid var(--bd)}
+.gl{width:190px;flex:none;font-size:12px;display:flex;gap:6px;align-items:center}
+.gt{flex:1;position:relative;height:100%}
+.gb{position:absolute;top:11px;height:14px;border-radius:5px;background:var(--teal)}.gb.done{background:var(--blue)}.gb.wk{background:var(--yel)}
+.td{position:absolute;top:0;bottom:0;width:2px;background:var(--red);z-index:2;pointer-events:none}
+.tick{position:absolute;top:0;font-size:10px;color:var(--mu);border-left:1px solid var(--bd);padding-left:3px;height:100%}
+.dw{display:flex;gap:16px;align-items:center;padding:6px 16px 16px;flex-wrap:wrap}.lg{flex:1;min-width:160px;font-size:12px;display:grid;gap:6px}
+.lg div{display:flex;gap:7px;align-items:center}.lg b{margin-left:auto;font-weight:500}.lg i{width:9px;height:9px;border-radius:50%}
+.mod{position:fixed;inset:0;background:rgba(0,0,0,.6);display:none;place-items:center;z-index:20;padding:16px}
+.mod.on{display:grid}.mb{background:var(--panel);border:1px solid var(--bd);border-radius:14px;padding:20px;width:100%;max-width:420px;max-height:90%;overflow:auto}
+.mb h3{margin:0 0 12px}.mb label{display:block;font-size:12px;color:var(--mu);margin-bottom:10px}
+.mb input,.mb select{display:block;width:100%;margin-top:4px;height:36px;border:1px solid var(--bd);background:var(--in);border-radius:8px;padding:0 10px}
+.ac{display:flex;gap:8px;justify-content:flex-end;margin-top:6px}
+.toast{position:fixed;bottom:calc(18px + env(safe-area-inset-bottom,0px));left:50%;transform:translateX(-50%);background:var(--teal);color:#032;padding:9px 16px;border-radius:9px;font-weight:600;display:none;z-index:30}
+.tabs{display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap}.tabs .btn{padding:6px 12px}
+.empty{padding:22px;text-align:center;color:var(--mu)}
+@media(max-width:1100px){.kpis{grid-template-columns:repeat(2,1fr)}.g{grid-template-columns:1fr}}
+@media(max-width:760px){.side{width:60px;padding:12px 6px}.brand span,.nav button span{display:none}.brand{justify-content:center;padding:6px 0 14px}.nav button{justify-content:center;padding:11px 0}.main{margin-left:60px}.content{padding:16px 12px 40px}.top{padding:0 12px}.kpis{grid-template-columns:1fr}.fin{grid-template-columns:1fr}.tr .un{display:none}}
+</style></head><body>
+<div class="app">
+<aside class="side"><div class="brand"><div class="logo">P</div><span>ProjectFlow</span></div><nav class="nav" id="nav"></nav></aside>
+<main class="main">
+<header class="top"><div class="sw"><input class="search" id="q" placeholder="Buscar projetos, tarefas, pessoas..." autocomplete="off"><div class="res" id="res"></div></div>
+<div class="tr"><button class="ib" id="th" title="Alternar tema">◐</button><div class="av">R</div><div class="un"><b>Ryan</b><br><small style="color:var(--mu)">Administrador</small></div></div></header>
+<div class="content" id="v"></div>
+</main></div>
+<div class="mod" id="mod"><div class="mb" id="mb"></div></div><div class="toast" id="ts"></div>
+<script>
+const TODAY=new Date(2025,8,22),KEY='pf-v2';
+const $=s=>document.querySelector(s);
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const brl=n=>n.toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
+const pd=s=>{const[a,b,c]=s.split('-');return new Date(+a,b-1,+c)};
+const fd=s=>s.split('-').reverse().join('/');
+const wk=s=>[0,6].includes(pd(s).getDay());
+const MS=['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set'];
+const COL=['#12d8c0','#2eb3d0','#606bd8','#f2bf43','#9666dc','#718590'];
+const PEOPLE=['Ryan','João Silva','Maria Souza','Lucas Ferreira'];
+const ICO={home:'M3 11l9-8 9 8M5 10v10h14V10',fold:'M3 6h6l2 2h10v11H3z',chk:'M4 4h16v16H4zM8 12l3 3 5-6',cal:'M4 5h16v15H4zM4 10h16M9 3v4M15 3v4',clk:'M12 3a9 9 0 100 18 9 9 0 000-18zM12 7v5l3 2',usd:'M12 3v18M16 7c-1-2-7-2-7 1s7 2 7 5-6 3-8 1',rep:'M5 20V10M12 20V4M19 20v-7',team:'M9 11a3 3 0 100-6 3 3 0 000 6zM3 20c0-3 3-5 6-5s6 2 6 5M17 6a3 3 0 010 6M21 20c0-2-1-4-3-4',doc:'M6 3h8l4 4v14H6zM14 3v4h4',set:'M12 9a3 3 0 100 6 3 3 0 000-6zM4 12h2M18 12h2M12 4v2M12 18v2'};
+const NAV=[['home','Início','dash'],['fold','Projetos','proj'],['chk','Tarefas','task'],['cal','Cronograma','sched'],['clk','Horas','hrs'],['usd','Financeiro','fin'],['rep','Relatórios','rep'],['team','Equipe','team'],['doc','Documentos','docs'],['set','Configurações','cfg']];
+const seed=()=>({
+projects:[
+{id:1,name:'Website Institucional',client:'TechSolutions',progress:78,status:'Em andamento',due:'2025-09-29'},
+{id:2,name:'App Mobile',client:'NovaTech',progress:52,status:'Em andamento',due:'2025-10-15'},
+{id:3,name:'Identidade Visual',client:'Aurora Brand',progress:100,status:'Concluído',due:'2025-09-10'},
+{id:4,name:'Campanha de Marketing',client:'Horizonte Digital',progress:32,status:'Em andamento',due:'2025-10-22'},
+{id:5,name:'Sistema Interno',client:'Alfa Corp',progress:12,status:'Pausado',due:'2025-11-28'}],
+tasks:[
+{id:1,title:'Revisão do layout',pid:1,due:'2025-09-22',time:'14:00',done:false},
+{id:2,title:'Reunião com o cliente',pid:2,due:'2025-09-22',time:'16:00',done:false},
+{id:3,title:'Desenvolver API',pid:5,due:'2025-09-23',time:'09:00',done:false},
+{id:4,title:'Apresentação do projeto',pid:4,due:'2025-09-24',time:'10:00',done:false},
+{id:5,title:'Feedback do cliente',pid:3,due:'2025-09-26',time:'15:00',done:false},
+{id:6,title:'Criar wireframes',pid:2,due:'2025-09-25',time:'11:00',done:false},
+{id:7,title:'Revisar briefing',pid:4,due:'2025-09-30',time:'09:30',done:false},
+{id:8,title:'Relatório mensal',pid:1,due:'2025-09-30',time:'17:00',done:false}],
+phases:[
+{id:1,pid:1,name:'Planejamento',s:'2025-09-01',e:'2025-09-05',done:true},
+{id:2,pid:1,name:'Design',s:'2025-09-08',e:'2025-09-12',done:true},
+{id:3,pid:1,name:'Desenvolvimento',s:'2025-09-15',e:'2025-09-26',done:false},
+{id:4,pid:1,name:'Testes',s:'2025-09-22',e:'2025-09-27',done:false},
+{id:5,pid:1,name:'Deploy',s:'2025-09-29',e:'2025-09-29',done:false}],
+hours:[{id:1,pid:1,who:'João Silva',h:30,d:'2025-09-20'},{id:2,pid:1,who:'Lucas Ferreira',h:2,d:'2025-09-22'},{id:3,pid:2,who:'Maria Souza',h:28,d:'2025-09-19'},{id:4,pid:3,who:'Maria Souza',h:20,d:'2025-09-09'},{id:5,pid:4,who:'João Silva',h:18,d:'2025-09-18'},{id:6,pid:5,who:'Ryan',h:12,d:'2025-09-12'},{id:7,pid:0,who:'Ryan',h:14,d:'2025-09-15'}],
+rev:[9800,11200,13400,12600,16800,15900,19400,25402,28450],
+exp:[4200,5100,5600,5300,7200,7000,9300,11790,12380],
+acts:[[2,'João Silva comentou na tarefa "Design da landing page"'],[4,'Maria Souza concluiu a tarefa "Criação de artes"'],[5,'Novo documento adicionado: "Briefing - Campanha Outubro.pdf"'],[6,'Projeto "App Mobile" atualizado: progresso 45% → 52%'],[7,'Lucas Ferreira registrou 2h no projeto "Website Institucional"']].map(([h,t])=>({ts:Date.now()-h*36e5,t})),
+docs:['Briefing - Campanha Outubro.pdf','Contrato TechSolutions.pdf'],nid:100});
+let S;try{S=JSON.parse(localStorage.getItem(KEY))}catch(e){}if(!S||!S.projects)S=seed();
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}};
+const pn=id=>(S.projects.find(p=>p.id==id)||{name:'Outros'}).name;
+const act=t=>{S.acts.unshift({ts:Date.now(),t});S.acts=S.acts.slice(0,30)};
+const ago=ts=>{const m=Math.round((Date.now()-ts)/6e4);return m<1?'agora':m<60?`há ${m} min`:`há ${Math.round(m/60)} h`};
+const toast=m=>{const t=$('#ts');t.textContent=m;t.style.display='block';clearTimeout(toast.i);toast.i=setTimeout(()=>t.style.display='none',2200)};
+const stc=s=>s=='Concluído'?'c':s=='Pausado'?'p':'';
+const prof=(r,e)=>r[8]-r[7];
+let view='dash',gp=1,tf='todas';
+function go(v){view=v;$('#nav').innerHTML=NAV.map(([i,l,k])=>`<button class="${k==v?'on':''}" onclick="go('${k}')" title="${l}"><svg viewBox="0 0 24 24"><path d="${ICO[i]}"/></svg><span>${l}</span></button>`).join('');render();scrollTo(0,0)}
+function render(){save();$('#v').innerHTML=({dash,proj,task,sched,hrs,fin,rep,team,docs,cfg})[view]()}
+function form(title,fields,ok,del){
+ $('#mb').innerHTML=`<h3>${title}</h3><form id="f">${fields.map(f=>`<label>${f.l}${f.o?`<select name="${f.k}">${f.o.map(o=>`<option value="${o[0]??o}" ${(o[0]??o)==f.v?'selected':''}>${o[1]??o}</option>`).join('')}</select>`:`<input name="${f.k}" type="${f.t||'text'}" value="${esc(f.v??'')}" ${f.t=='number'?'step="any" min="0"':''} required>`}</label>`).join('')}<div class="ac">${del?'<button type="button" class="btn d" id="dl">Excluir</button>':''}<button type="button" class="btn s" onclick="cm()">Cancelar</button><button class="btn">Salvar</button></div></form>`;
+ $('#mod').classList.add('on');
+ $('#f').onsubmit=e=>{e.preventDefault();ok(Object.fromEntries(new FormData(e.target)));cm();render()};
+ if(del)$('#dl').onclick=()=>{if(confirm('Excluir este item?')){del();cm();render()}}}
+const cm=()=>$('#mod').classList.remove('on');
+$('#mod').onclick=e=>{if(e.target.id=='mod')cm()};
+const PO=()=>S.projects.map(p=>[p.id,p.name]);
+function dash(){
+ const a=S.projects.filter(p=>p.status=='Em andamento').length,t=S.tasks.filter(x=>!x.done).length,h=S.hours.reduce((s,x)=>s+x.h,0),r=S.rev[8],e=S.exp[8],l=r-e,lp=S.rev[7]-S.exp[7];
+ const ch=(a,b)=>{const v=((a-b)/b*100);return v.toFixed(0)};
+ const nx=S.tasks.filter(x=>!x.done).sort((a,b)=>(a.due+a.time).localeCompare(b.due+b.time)).slice(0,5);
+ const dl=d=>d==='2025-09-22'?'Hoje':d==='2025-09-23'?'Amanhã':fd(d).slice(0,5);
+ return `<h1>Olá, Ryan 👋</h1><p class="sub">Resumo do seu dia — ${TODAY.toLocaleDateString('pt-BR',{weekday:'long',day:'numeric',month:'long',year:'numeric'})}</p>
+<div class="kpis"><div class="card kpi" onclick="go('proj')"><small>Projetos ativos (em andamento)</small><b>${a}</b><small>${S.projects.length} no total</small></div>
+<div class="card kpi" onclick="go('task')"><small>Tarefas pendentes</small><b>${t}</b><small>${S.tasks.length-t} concluídas</small></div>
+<div class="card kpi" onclick="go('hrs')"><small>Horas registradas (set/2025)</small><b>${h}h</b><small>${S.hours.length} lançamentos</small></div>
+<div class="card kpi" onclick="go('fin')"><small>Receita de setembro/2025</small><b>${brl(r)}</b><span class="up">↑ ${ch(r,S.rev[7])}% vs. agosto</span></div></div>
+<div class="g"><div class="stack">
+<div class="card"><div class="ch"><h2>Projetos em destaque</h2><button class="lnk" onclick="go('proj')">Ver todos →</button></div><div class="tw">${ptable(S.projects,false)}</div></div>
+<div class="card"><div class="ch"><h2>Cronograma — ${esc(pn(gp))}</h2><button class="lnk" onclick="go('sched')">Abrir →</button></div>${gantt(gp,false)}</div></div>
+<div class="stack"><div class="card"><div class="ch"><h2>Horas por projeto</h2></div>${donut()}</div>
+<div class="card"><div class="ch"><h2>Financeiro</h2><button class="lnk" onclick="go('fin')">Detalhes →</button></div><div class="fin"><div><small>Receitas</small><b>${brl(r)}</b><span class="up">↑ ${ch(r,S.rev[7])}%</span></div><div><small>Despesas</small><b>${brl(e)}</b><span class="dn">↑ ${ch(e,S.exp[7])}%</span></div><div><small>Lucro</small><b>${brl(l)}</b><span class="${l>=lp?'up':'dn'}">${l>=lp?'↑':'↓'} ${Math.abs(ch(l,lp))}%</span></div></div></div>
+<div class="card"><div class="ch"><h2>Atividades recentes</h2></div>${S.acts.slice(0,5).map(x=>`<div class="row"><div>${esc(x.t)}<small>${ago(x.ts)}</small></div></div>`).join('')}</div>
+<div class="card"><div class="ch"><h2>Próximas tarefas</h2><button class="lnk" onclick="go('task')">Ver todas →</button></div>${nx.length?nx.map(x=>`<div class="row"><input type="checkbox" onchange="tg(${x.id})"><div><b>${esc(x.title)}</b><small>${esc(pn(x.pid))}</small></div><span class="t">${dl(x.due)} · ${x.time}</span></div>`).join(''):'<div class="empty">Tudo em dia 🎉</div>'}</div></div></div>`}
+function ptable(L,ed){return `<table><tr><th>Projeto</th><th>Progresso</th><th>Status</th><th>Prazo</th>${ed?'<th></th>':''}</tr>${L.map(p=>`<tr><td><b>${esc(p.name)}</b><small>Cliente: ${esc(p.client)}</small></td><td><span class="bar"><i style="width:${p.progress}%"></i></span>${p.progress}%</td><td><span class="st ${stc(p.status)}">${p.status}</span></td><td>${fd(p.due)}${wk(p.due)?' <span title="Prazo em fim de semana" style="color:var(--yel)">⚠</span>':''}</td>${ed?`<td><button class="ib" onclick="pf(${p.id})">Editar</button></td>`:''}</tr>`).join('')||'<tr><td colspan="5" class="empty">Nenhum projeto.</td></tr>'}</table>`}
+function pf(id){const p=S.projects.find(x=>x.id==id)||{name:'',client:'',progress:0,status:'Em andamento',due:'2025-10-31'};
+ form(id?'Editar projeto':'Novo projeto',[{k:'name',l:'Nome',v:p.name},{k:'client',l:'Cliente',v:p.client},{k:'progress',l:'Progresso (%)',t:'number',v:p.progress},{k:'status',l:'Status',o:['Em andamento','Pausado','Concluído'],v:p.status},{k:'due',l:'Prazo',t:'date',v:p.due}],d=>{
+ d.progress=Math.max(0,Math.min(100,+d.progress));if(d.status=='Concluído')d.progress=100;
+ if(wk(d.due)){const x=pd(d.due);x.setDate(x.getDate()+(x.getDay()==6?2:1));d.due=x.toISOString().slice(0,10);toast('Prazo em fim de semana movido para segunda-feira')}
+ if(id){if(p.progress!=d.progress)act(`Projeto "${d.name}" atualizado: progresso ${p.progress}% → ${d.progress}%`);Object.assign(p,d)}else{S.projects.push({id:S.nid++,...d});act(`Novo projeto "${d.name}" criado`)}},id?()=>{S.projects=S.projects.filter(x=>x.id!=id);S.tasks=S.tasks.filter(x=>x.pid!=id);S.phases=S.phases.filter(x=>x.pid!=id)}:null)}
+function proj(){return `<div class="ch" style="padding-left:0"><h1>Projetos</h1><button class="btn" onclick="pf()">+ Novo projeto</button></div><div class="card"><div class="tw">${ptable(S.projects,true)}</div></div>`}
+function tg(id){const t=S.tasks.find(x=>x.id==id);t.done=!t.done;if(t.done)act(`Tarefa "${t.title}" concluída`);render()}
+function tf2(id){const t=S.tasks.find(x=>x.id==id)||{title:'',pid:S.projects[0]?.id,due:'2025-09-22',time:'09:00'};
+ form(id?'Editar tarefa':'Nova tarefa',[{k:'title',l:'Título',v:t.title},{k:'pid',l:'Projeto',o:PO(),v:t.pid},{k:'due',l:'Data',t:'date',v:t.due},{k:'time',l:'Hora',t:'time',v:t.time}],d=>{d.pid=+d.pid;if(id)Object.assign(t,d);else S.tasks.push({id:S.nid++,done:false,...d})},id?()=>{S.tasks=S.tasks.filter(x=>x.id!=id)}:null)}
+function task(){const L=S.tasks.filter(t=>tf=='todas'||(tf=='pendentes'?!t.done:t.done)).sort((a,b)=>(a.due+a.time).localeCompare(b.due+b.time));
+ return `<div class="ch" style="padding-left:0"><h1>Tarefas</h1><button class="btn" onclick="tf2()">+ Nova tarefa</button></div><div class="tabs">${['todas','pendentes','concluídas'].map(k=>`<button class="btn ${tf==k?'':'s'}" onclick="tf='${k}';render()">${k[0].toUpperCase()+k.slice(1)}</button>`).join('')}</div><div class="card">${L.map(t=>`<div class="row ${t.done?'done':''}"><input type="checkbox" ${t.done?'checked':''} onchange="tg(${t.id})"><div><b>${esc(t.title)}</b><small>${esc(pn(t.pid))}</small></div><span class="t">${fd(t.due)} · ${t.time}</span><button class="ib" onclick="tf2(${t.id})">Editar</button></div>`).join('')||'<div class="empty">Nenhuma tarefa.</div>'}</div>`}
+function gantt(pid,ed){const P=S.phases.filter(x=>x.pid==pid);if(!P.length)return '<div class="empty">Sem etapas neste projeto.</div>';
+ const mn=Math.min(...P.map(x=>+pd(x.s))),mx=Math.max(...P.map(x=>+pd(x.e))),D=864e5,n=(mx-mn)/D+1,pc=d=>(+d-mn)/D/n*100;
+ const ticks=[];for(let i=0;i<n;i+=7){const d=new Date(mn+i*D);ticks.push(`<div class="tick" style="left:${i/n*100}%">${d.getDate()}/${d.getMonth()+1}</div>`)}
+ const tp=pc(TODAY),inr=TODAY>=mn&&TODAY<=mx+D;
+ return `<div class="gantt"><div class="gi"><div class="gr" style="border:0;height:24px"><div class="gl"></div><div class="gt">${ticks.join('')}</div></div>
+ ${P.map(x=>`<div class="gr"><div class="gl"><input type="checkbox" ${x.done?'checked':''} onchange="ph(${x.id})"><span>${esc(x.name)}<br><small style="color:var(--mu)">${fd(x.s).slice(0,5)} – ${fd(x.e).slice(0,5)}</small></span></div><div class="gt"><div class="gb ${x.done?'done':wk(x.e)?'wk':''}" style="left:${pc(pd(x.s))}%;width:${Math.max(1.5,(+pd(x.e)-+pd(x.s)+D)/D/n*100)}%" title="${fd(x.s)} → ${fd(x.e)}"></div></div></div>`).join('')}
+ ${inr?`<div class="td" style="left:calc(190px + (100% - 190px)*${tp/100});top:24px" title="Hoje"></div>`:''}</div></div>`}
+function ph(id){const x=S.phases.find(p=>p.id==id);x.done=!x.done;render()}
+function phf(id){const x=S.phases.find(p=>p.id==id)||{name:'',s:'2025-09-22',e:'2025-09-26'};
+ form(id?'Editar etapa':'Nova etapa',[{k:'name',l:'Etapa',v:x.name},{k:'s',l:'Início',t:'date',v:x.s},{k:'e',l:'Fim',t:'date',v:x.e}],d=>{if(d.e<d.s)d.e=d.s;if(id)Object.assign(x,d);else S.phases.push({id:S.nid++,pid:gp,done:false,...d})},id?()=>{S.phases=S.phases.filter(p=>p.id!=id)}:null)}
+function sched(){return `<div class="ch" style="padding-left:0"><h1>Cronograma</h1><div><select class="ib" onchange="gp=+this.value;render()" style="padding:7px">${S.projects.map(p=>`<option value="${p.id}" ${p.id==gp?'selected':''}>${esc(p.name)}</option>`).join('')}</select> <button class="btn" onclick="phf()">+ Etapa</button></div></div><div class="card">${gantt(gp,true)}${S.phases.filter(x=>x.pid==gp).map(x=>`<div class="row"><b>${esc(x.name)}</b><span class="t">${fd(x.s)} – ${fd(x.e)}${wk(x.e)?' ⚠ fim de semana':''}</span><button class="ib" onclick="phf(${x.id})">Editar</button></div>`).join('')}</div>`}
+function byProj(){const m={};S.hours.forEach(x=>m[x.pid]=(m[x.pid]||0)+x.h);return Object.entries(m).map(([k,v])=>[pn(k),v]).sort((a,b)=>b[1]-a[1])}
+function donut(){const B=byProj(),T=B.reduce((s,x)=>s+x[1],0)||1;let o=0;
+ return `<div class="dw"><svg width="120" height="120" viewBox="0 0 42 42">${B.map((x,i)=>{const l=x[1]/T*100,c=`<circle cx="21" cy="21" r="15.9" fill="none" stroke="${COL[i%6]}" stroke-width="6" pathLength="100" stroke-dasharray="${l} ${100-l}" stroke-dashoffset="${-o}" transform="rotate(-90 21 21)"/>`;o+=l;return c}).join('')}<text x="21" y="22" text-anchor="middle" font-size="6" font-weight="700" fill="currentColor">${T}h</text></svg><div class="lg">${B.map((x,i)=>`<div><i style="background:${COL[i%6]}"></i>${esc(x[0])}<b>${x[1]}h · ${Math.round(x[1]/T*100)}%</b></div>`).join('')}</div></div>`}
+function hf(){form('Registrar horas',[{k:'pid',l:'Projeto',o:[...PO(),[0,'Outros']],v:S.projects[0]?.id},{k:'who',l:'Pessoa',o:PEOPLE,v:'Ryan'},{k:'h',l:'Horas',t:'number',v:1},{k:'d',l:'Data',t:'date',v:'2025-09-22'}],d=>{d.pid=+d.pid;d.h=+d.h;S.hours.unshift({id:S.nid++,...d});act(`${d.who} registrou ${d.h}h no projeto "${pn(d.pid)}"`)})}
+function hrs(){return `<div class="ch" style="padding-left:0"><h1>Horas</h1><button class="btn" onclick="hf()">+ Registrar horas</button></div><div class="g"><div class="card"><div class="tw"><table><tr><th>Data</th><th>Projeto</th><th>Pessoa</th><th>Horas</th><th></th></tr>${[...S.hours].sort((a,b)=>b.d.localeCompare(a.d)).map(x=>`<tr><td>${fd(x.d)}</td><td>${esc(pn(x.pid))}</td><td>${esc(x.who)}</td><td>${x.h}h</td><td><button class="ib" onclick="S.hours=S.hours.filter(y=>y.id==${x.id}?0:1);render()">✕</button></td></tr>`).join('')}</table></div></div><div class="card"><div class="ch"><h2>Distribuição</h2></div>${donut()}</div></div>`}
+function ff(){form('Novo lançamento (setembro/2025)',[{k:'t',l:'Tipo',o:[['rev','Receita'],['exp','Despesa']],v:'rev'},{k:'v',l:'Valor (R$)',t:'number',v:0}],d=>{S[d.t][8]+=+d.v;act(`Lançamento de ${brl(+d.v)} (${d.t=='rev'?'receita':'despesa'}) em setembro/2025`)})}
+function fin(){const W=560,H=210,m=Math.ceil(Math.max(...S.rev,...S.exp)/10000)*10000,x=i=>50+i*(W-70)/8,y=v=>H-25-v/m*(H-45),pl=a=>a.map((v,i)=>`${x(i)},${y(v)}`).join(' ');
+ const r=S.rev[8],e=S.exp[8];
+ return `<div class="ch" style="padding-left:0"><h1>Financeiro</h1><button class="btn" onclick="ff()">+ Lançamento</button></div><div class="card"><div class="fin" style="padding-top:14px"><div><small>Receita · set/2025</small><b>${brl(r)}</b></div><div><small>Despesa · set/2025</small><b>${brl(e)}</b></div><div><small>Lucro · set/2025</small><b>${brl(r-e)}</b></div></div>
+ <div style="padding:0 16px 8px;color:var(--mu);font-size:12px">Valores mensais (não acumulados), Jan–Set/2025 · <span style="color:var(--teal)">● Receita</span> <span style="color:var(--blue)">● Despesa</span></div>
+ <div class="tw" style="padding:0 12px 14px"><svg viewBox="0 0 ${W} ${H}" style="width:100%;min-width:480px">${[0,1,2,3].map(i=>{const v=m/3*i;return `<line x1="50" x2="${W-20}" y1="${y(v)}" y2="${y(v)}" stroke="var(--bd)"/><text x="44" y="${y(v)+4}" text-anchor="end" font-size="10" fill="var(--mu)">${Math.round(v/1000)}k</text>`}).join('')}
+ ${MS.map((n,i)=>`<text x="${x(i)}" y="${H-6}" text-anchor="middle" font-size="10" fill="var(--mu)">${n}</text>`).join('')}
+ <polyline points="${pl(S.rev)}" fill="none" stroke="#12d8c0" stroke-width="3"/><polyline points="${pl(S.exp)}" fill="none" stroke="#4b9cff" stroke-width="3"/>
+ ${S.rev.map((v,i)=>`<circle cx="${x(i)}" cy="${y(v)}" r="3.5" fill="#12d8c0"><title>${MS[i]}: ${brl(v)}</title></circle>`).join('')}${S.exp.map((v,i)=>`<circle cx="${x(i)}" cy="${y(v)}" r="3.5" fill="#4b9cff"><title>${MS[i]}: ${brl(v)}</title></circle>`).join('')}</svg></div></div>`}
+function rep(){return `<h1>Relatórios</h1><p class="sub">Consolidado por projeto</p><div class="card"><div class="tw"><table><tr><th>Projeto</th><th>Status</th><th>Progresso</th><th>Horas</th><th>Tarefas (feitas/total)</th></tr>${S.projects.map(p=>{const t=S.tasks.filter(x=>x.pid==p.id);return `<tr><td>${esc(p.name)}</td><td><span class="st ${stc(p.status)}">${p.status}</span></td><td>${p.progress}%</td><td>${S.hours.filter(x=>x.pid==p.id).reduce((s,x)=>s+x.h,0)}h</td><td>${t.filter(x=>x.done).length}/${t.length}</td></tr>`}).join('')}</table></div></div>`}
+function team(){return `<h1>Equipe</h1><p class="sub">Horas e participação</p><div class="card">${PEOPLE.map(p=>`<div class="row"><div class="av" style="width:30px;height:30px;font-size:13px">${p[0]}</div><div><b>${p}</b><small>${S.hours.filter(x=>x.who==p).length} lançamentos</small></div><span class="t">${S.hours.filter(x=>x.who==p).reduce((s,x)=>s+x.h,0)}h</span></div>`).join('')}</div>`}
+function docs(){return `<div class="ch" style="padding-left:0"><h1>Documentos</h1><button class="btn" onclick="form('Novo documento',[{k:'n',l:'Nome do arquivo'}],d=>{S.docs.unshift(d.n);act('Novo documento adicionado: \\''+d.n+'\\'')})">+ Adicionar</button></div><div class="card">${S.docs.map((d,i)=>`<div class="row">📄 ${esc(d)}<button class="ib t" onclick="S.docs.splice(${i},1);render()">✕</button></div>`).join('')||'<div class="empty">Nenhum documento.</div>'}</div>`}
+function cfg(){return `<h1>Configurações</h1><p class="sub">Os dados ficam salvos neste navegador.</p><div class="card" style="padding:16px;display:flex;gap:10px;flex-wrap:wrap"><button class="btn s" onclick="document.documentElement.dataset.theme=document.documentElement.dataset.theme=='light'?'':'light'">Alternar tema</button><button class="btn d" onclick="if(confirm('Restaurar dados de exemplo?')){S=seed();render();toast('Dados restaurados')}">Restaurar dados de exemplo</button></div>`}
+$('#th').onclick=()=>document.documentElement.dataset.theme=document.documentElement.dataset.theme=='light'?'':'light';
+$('#q').oninput=e=>{const q=e.target.value.trim().toLowerCase(),R=$('#res');if(!q){R.style.display='none';return}
+ const o=[...S.projects.filter(p=>(p.name+p.client).toLowerCase().includes(q)).map(p=>['Projeto',p.name,'proj']),...S.tasks.filter(t=>t.title.toLowerCase().includes(q)).map(t=>['Tarefa',t.title,'task']),...PEOPLE.filter(p=>p.toLowerCase().includes(q)).map(p=>['Pessoa',p,'team'])];
+ R.innerHTML=o.map(x=>`<div data-v="${x[2]}"><span>${esc(x[1])}</span><small>${x[0]}</small></div>`).join('')||'<div><small>Nada encontrado</small></div>';R.style.display='block'};
+$('#res').onclick=e=>{const d=e.target.closest('[data-v]');if(d){go(d.dataset.v);$('#res').style.display='none';$('#q').value=''}};
+document.addEventListener('click',e=>{if(!e.target.closest('.sw'))$('#res').style.display='none'});
+go('dash');
+</script></body></html>
